@@ -2,6 +2,54 @@
 SMODS.Sprite:new("redd_atlas_j", Redditro.mod.path, "redd_jokers_atlas.png", 71, 95, "redd_atlas_j"):register()
 SMODS.Sprite:new("redd_ace", Redditro.mod.path, "Ace_sexual.png", 71, 95, "redd_ace"):register()
 
+
+--[[
+JOKER TEMPLATE:
+
+SMODS.Joker {
+    key = "redd_jokername",
+    loc_txt = {
+        name = "Joker Name",
+        text = {
+            "line 1",
+            "line 2",
+            ...
+        }
+    },
+    atlas = "jokername / redd_atlas_j", -- (depends if we use sprite sheets or not)
+    post = { x = n, y = m}, -- (just use number lol)
+    rarity = 1,
+    cost = 1,
+    blueprint_compat = true/false,
+    config = {
+        extra = {
+            mult = 1,
+            gain = 0.,
+            ...
+        }
+    },
+    loc_vars = function(self, info_queue, card)
+        return {
+            vars = {
+                card.ability.extra.mult,
+                card.ability.extra.gain,
+                ...
+            }
+        }
+    end,
+
+    calculate = function(self, card, )
+        if context.joker_main then
+            return {
+                mult = card.ability.extra.mult
+            }
+        end
+    end,
+
+}
+
+]]--
+
 SMODS.Joker {
     key = "redd_noise",
     loc_txt = {
@@ -14,15 +62,16 @@ SMODS.Joker {
             "{C:inactive}Currently: #3#{}",
         }
     },
+    atlas = "redd_atlas_j",
+    pos = { x = 1, y = 0 },
+    rarity = 3,
+    cost = 7,
+    blueprint_compat = true,
     config = { extra = { mult = 1, round_counted = false, type = "skip" } },
+   
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.mult, card.ability.extra.round_counted, card.ability.extra.type } }
     end,
-    blueprint_compat = true,
-    rarity = 3,
-    atlas = "redd_atlas_j",
-    pos = { x = 1, y = 0 },
-    cost = 7,
 
     calculate = function(self, card, context)
         if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint then
@@ -34,7 +83,7 @@ SMODS.Joker {
             return { message = message, other_card = card }
         end
 
-        if context.skip_blind and card.ability.extra.type == "skip" then
+        if context.skip_blind and card.ability.extra.type == "skip" and not context.blueprint then
             card.ability.extra.mult = card.ability.extra.mult + 0.5
             card:juice_up(0.5, 0.5)
 
@@ -45,7 +94,7 @@ SMODS.Joker {
             return { message = "X0.5", other_card = card }
         end
 
-        if context.setting_blind and card.ability.extra.type == "play" then
+        if context.setting_blind and card.ability.extra.type == "play" and not context.blueprint then
             card.ability.extra.mult = card.ability.extra.mult + 0.5
             card:juice_up(0.5, 0.5)
 
@@ -84,10 +133,12 @@ SMODS.Joker {
             "times instead."
         }
     },
-    rarity = 2,
     atlas = "redd_atlas_j",
     pos = { x = 0, y = 0 },
+    rarity = 2,
     cost = 4,
+    blueprint_compat = true,
+
     calculate = function(self, card, context)
         if context.repetition and context.cardarea == G.play and context.other_card == context.scoring_hand[3] then
             if context.other_card:get_id() == 3 then
@@ -113,10 +164,17 @@ SMODS.Joker {
             "{C:inactive}(Currently: {X:mult,C:white}x#2#{}){}",    
         }
     },
+    atlas = "redd_atlas_j",
+    pos = { x = 0, y = 0 },
+    rarity = 2,
+    cost = 4,
+    blueprint_compat = true,
     config = { extra = { mult = 1, count = 0, gain = 0.5 } },
+    
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.count, card.ability.extra.mult, card.ability.extra.gain } }
     end,
+    
     calculate = function(self, card, context)
         if  context.individual and context.cardarea == G.play and context.other_card:get_id() == 4 and not context.blueprint then
             card.ability.extra.count = card.ability.extra.count + 1
@@ -136,10 +194,6 @@ SMODS.Joker {
             }
         end
     end,
-    rarity = 2,
-    atlas = "redd_atlas_j",
-    pos = { x = 0, y = 0 },
-    cost = 4,
 }
 
 SMODS.Joker {
@@ -151,13 +205,18 @@ SMODS.Joker {
             "is a {C:attention}5 high card{}.",   
         }
     },
+    atlas = "redd_atlas_j",
+    pos = { x = 0, y = 0 },
+    rarity = 2,
+    cost = 4,
+    blueprint_compat = true,
     config = { extra = { xmult = 5} },
+    
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.xmult} }
     end,    
+    
     calculate = function(self, card, context)
-
-
         if context.joker_main and context.scoring_name == "High Card" then
             trigger = false
             for _, pcard in ipairs(context.scoring_hand) do
@@ -171,13 +230,6 @@ SMODS.Joker {
             end
         end
     end,
-        
-
-    
-    rarity = 2,
-    atlas = "redd_atlas_j",
-    pos = { x = 0, y = 0 },
-    cost = 4,
 }
 
 SMODS.Joker {
@@ -189,10 +241,12 @@ SMODS.Joker {
             "scored.",   
         }
     },
-    rarity = 2,
     atlas = "redd_atlas_j",
     pos = { x = 0, y = 0 },
+    rarity = 2,
     cost = 4,
+    blueprint_compat = true,
+
     calculate = function(self, card, context) 
         if context.individual and context.cardarea == G.play then
 			-- :get_id tests for the rank of the card. Other than 2-10, Jack is 11, Queen is 12, King is 13, and Ace is 14.
@@ -217,10 +271,12 @@ SMODS.Joker {
             "when scored.",   
         }
     },
-    rarity = 2,
     atlas = "redd_atlas_j",
     pos = { x = 0, y = 0 },
+    rarity = 2,
     cost = 4,
+    blueprint_compat = false,
+
     calculate = function(self, card, context)
         if context.before and context.main_eval and not context.blueprint then
             local faces = 0
@@ -246,9 +302,6 @@ SMODS.Joker {
     end
 }
 
-
-
-
 SMODS.Joker{
     key = "redd_acesexual",
     loc_txt = {
@@ -260,12 +313,17 @@ SMODS.Joker{
             "{C:inactive}(Currently {X:mult,C:white}X#1#{} Mult){}"
         }
     },
+    atlas = "redd_ace",
+    rarity = 3,
+    cost = 7,
+    blueprint_compat = true,
     config = {
         extra = {
             xmult = 1,
             gain = 0.05
         }
     },
+
     loc_vars = function(self, info_queue, card)
         return {
             vars = {
@@ -276,7 +334,7 @@ SMODS.Joker{
     end,
 
     calculate = function(self, card, context)
-        if context.individual and context.cardarea == G.play then
+        if context.individual and context.cardarea == G.play and not context.blueprint then
             if context.other_card:get_id() == 14 then 
                 card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.gain
             end
@@ -289,7 +347,7 @@ SMODS.Joker{
             }
         end
     end,
-    rarity = 3,
-    atlas = "redd_ace",
-    cost = 7,
 }
+
+
+-- ####################################### VERSION 1.0.2 ###############################################
