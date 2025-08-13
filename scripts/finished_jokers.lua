@@ -59,7 +59,7 @@ SMODS.Joker {
             " {C:chips}Play{} or {C:red}Skip{} a {C:attention}Blind{}.",
             "Changes every blind",
             "Now {X:mult,C:white} x#1#{} Mult",
-            "{C:inactive}Currently: #3#{}",
+            "{C:inactive}Currently: #2#{}",
         }
     },
     atlas = "redd_atlas_j",
@@ -67,41 +67,31 @@ SMODS.Joker {
     rarity = 3,
     cost = 7,
     blueprint_compat = true,
-    config = { extra = { mult = 1, round_counted = false, type = "skip" } },
+    config = { extra = { mult = 1, type = "skip" } },
    
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.mult, card.ability.extra.round_counted, card.ability.extra.type } }
+        return { vars = { card.ability.extra.mult, card.ability.extra.type } }
     end,
 
     calculate = function(self, card, context)
-        if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint then
-            card.ability.extra.round_counted = true
+
+        if (context.skip_blind or context.setting_blind) and not context.blueprint then 
+            message = ""
+            if context.skip_blind and card.ability.extra.type == "skip" then
+                card.ability.extra.mult = card.ability.extra.mult + 0.5
+                message = " - X0.5"
+                card:juice_up(0.5, 0.5)
+            end
+            if context.setting_blind and card.ability.extra.type == "play" then
+                card.ability.extra.mult = card.ability.extra.mult + 0.5
+                message = " - X0.5"
+                card:juice_up(0.5, 0.5)
+            end
             local available = { "play", "skip" }
             local chosen = pseudorandom_element(available, pseudoseed("asc_noise"))
             card.ability.extra.type = chosen
-            message = "Now " .. chosen
-            return { message = message, other_card = card }
-        end
-
-        if context.skip_blind and card.ability.extra.type == "skip" and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult + 0.5
-            card:juice_up(0.5, 0.5)
-
-            local available = { "play", "skip" }
-            local chosen = pseudorandom_element(available, pseudoseed("asc_noise"))
-            card.ability.extra.type = chosen
-
-            return { message = "X0.5", other_card = card }
-        end
-
-        if context.setting_blind and card.ability.extra.type == "play" and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult + 0.5
-            card:juice_up(0.5, 0.5)
-
-            return { 
-                message = "X0.5",
-                other_card = card,
-            }
+            text = "Now " .. chosen .. message
+            return { message = text, other_card = card }
         end
 
         if context.joker_main then
