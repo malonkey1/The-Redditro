@@ -157,8 +157,8 @@ SMODS.Joker {
     },
     atlas = "redd_atlas_j",
     pos = { x = 0, y = 0 },
-    rarity = 2,
-    cost = 4,
+    rarity = 3, -- Bumped at version 1.0.4 (busted)
+    cost = 6,
     blueprint_compat = true,
     config = { extra = { mult = 1, count = 0, gain = 0.5 } },
     

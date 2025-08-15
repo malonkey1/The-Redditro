@@ -28,4 +28,21 @@
 - **Bottom Half** - +100 chips if hand contains 2 or fewer cards.
 - **Blush** - All played face cards become wild cards when scored.
 
+## Version 1.0.4 Additions
 
+This versions fixes few minor bugs and cosmetic problems, like triggering jokers that adds Xmult when they have X1.
+
+### New Jokers
+- **Engagement Ring** - This Joker gains +1 Chips when each Diamond is scored.
+- **In The Knavy** - Jacks give +10 Mult when scored.
+- **Grateful Joker** - Gains X2 Mult at end of shop if no Rerolls were used.
+
+### New Spectral Cards
+- **Patriarcha** - Select 1 card to apply Platinum Seal.
+
+### New Seals
+- **Platinum Seal** - Creates a Chariot card if held in hand after the final played poker hand (Must have room).
+
+### Changes 
+- **Four Square** - rarity increased to Rare.
+- **Static Noise** - Fixed trigger and message timing.
