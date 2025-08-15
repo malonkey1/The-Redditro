@@ -27,3 +27,5 @@
 - **Anarchist** - Each scored 2, 3, 4, or 5 gives X1.5 mult. Face cards are debuffed.
 - **Bottom Half** - +100 chips if hand contains 2 or fewer cards.
 - **Blush** - All played face cards become wild cards when scored.
+
+

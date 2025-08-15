@@ -1,7 +1,6 @@
 SMODS.Sprite:new("redd_atlas_seal", Redditro.mod.path, "platinum_seal.png", 71, 95, "redd_atlas_seal"):register()
 
-        if context.end_of_round and context.cardarea == G.hand and context.other_card == card and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
-            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+-- ####################################### VERSION 1.0.4 ###############################################
 
 SMODS.Seal {
     key = "platinum",
