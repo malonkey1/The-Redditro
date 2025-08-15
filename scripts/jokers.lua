@@ -7,7 +7,7 @@ SMODS.Sprite:new("redd_ace", Redditro.mod.path, "Ace_sexual.png", 71, 95, "redd_
 JOKER TEMPLATE:
 
 SMODS.Joker {
-    key = "redd_jokername",
+    key = "jokername",
     loc_txt = {
         name = "Joker Name",
         text = {
@@ -51,7 +51,7 @@ SMODS.Joker {
 ]]--
 
 SMODS.Joker {
-    key = "redd_noise",
+    key = "noise",
     loc_txt = {
         name = "Static Noise",
         text = {
@@ -74,37 +74,27 @@ SMODS.Joker {
     end,
 
     calculate = function(self, card, context)
-        if context.end_of_round and not context.repetition and context.game_over == false and not context.blueprint then
-            card.ability.extra.round_counted = true
+
+        if (context.skip_blind or context.setting_blind) and not context.blueprint then 
+            message = ""
+            if context.skip_blind and card.ability.extra.type == "skip" then
+                card.ability.extra.mult = card.ability.extra.mult + 0.5
+                message = " - " .. card.ability.extra.mult
+                card:juice_up(0.5, 0.5)
+            end
+            if context.setting_blind and card.ability.extra.type == "play" then
+                card.ability.extra.mult = card.ability.extra.mult + 0.5
+                message = " - " .. card.ability.extra.mult
+                card:juice_up(0.5, 0.5)
+            end
             local available = { "play", "skip" }
             local chosen = pseudorandom_element(available, pseudoseed("asc_noise"))
             card.ability.extra.type = chosen
-            message = "Now " .. chosen
-            return { message = message, other_card = card }
+            text = "Now " .. chosen .. message
+            return { message = text, other_card = card }
         end
 
-        if context.skip_blind and card.ability.extra.type == "skip" and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult + 0.5
-            card:juice_up(0.5, 0.5)
-
-            local available = { "play", "skip" }
-            local chosen = pseudorandom_element(available, pseudoseed("asc_noise"))
-            card.ability.extra.type = chosen
-
-            return { message = "X0.5", other_card = card }
-        end
-
-        if context.setting_blind and card.ability.extra.type == "play" and not context.blueprint then
-            card.ability.extra.mult = card.ability.extra.mult + 0.5
-            card:juice_up(0.5, 0.5)
-
-            return { 
-                message = "X0.5",
-                other_card = card,
-            }
-        end
-
-        if context.joker_main then
+        if context.joker_main and card.ability.extra.mult > 1 then
             local mult = card.ability.extra.mult or 1
             return {
                 message = localize { type = "variable", key = "a_xmult", vars = { mult } },
@@ -123,7 +113,7 @@ SMODS.Joker {
 }
 
 SMODS.Joker {
-    key = "redd_rot",
+    key = "rot",
     loc_txt = {
         name = "Rule of Three",
         text = {
@@ -146,6 +136,7 @@ SMODS.Joker {
             else
                 repeat_count = 1
             end
+            card.juice_up(0.5 , 0.5)
             return {
                 repetitions = repeat_count
             }
@@ -154,7 +145,7 @@ SMODS.Joker {
 }
 
 SMODS.Joker {
-    key = "redd_square",
+    key = "square",
     loc_txt = {
         name = "Four Square",
         text = {
@@ -182,14 +173,16 @@ SMODS.Joker {
                 card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.gain
                 card.ability.extra.count = 0
             end
+            card.juice_up(0.5 , 0.5)
             return {
-                message = "Upgraded"
+                message = card.ability.extra.mult
             }
 
         end
-        if context.joker_main then
+        if context.joker_main and card.ability.extra.mult > 1 then
+            card.juice_up(0.5 , 0.5)
             return {
-                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } },
+                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.mult } },
                 Xmult_mod = card.ability.extra.mult
             }
         end
@@ -197,7 +190,7 @@ SMODS.Joker {
 }
 
 SMODS.Joker {
-    key = "redd_high_five",
+    key = "high_five",
     loc_txt = {
         name = "High Five",
         text = {
@@ -222,6 +215,7 @@ SMODS.Joker {
             for _, pcard in ipairs(context.scoring_hand) do
                 if not SMODS.has_enhancement(pcard, 'm_stone') then
                     if pcard:get_id() == 5 then
+                        card.juice_up(0.5 , 0.5)
                         return {
                             xmult = card.ability.extra.xmult
                         }
@@ -233,7 +227,7 @@ SMODS.Joker {
 }
 
 SMODS.Joker {
-    key = "redd_six_figures",
+    key = "six_figures",
     loc_txt = {
         name = "Six Figures",
         text = {
@@ -251,6 +245,7 @@ SMODS.Joker {
         if context.individual and context.cardarea == G.play then
 			-- :get_id tests for the rank of the card. Other than 2-10, Jack is 11, Queen is 12, King is 13, and Ace is 14.
 			if context.other_card:get_id() == 6 then
+                card.juice_up(0.5 , 0.5)
 				-- Specifically returning to context.other_card is fine with multiple values in a single return value, chips/mult are different from chip_mod and mult_mod, and automatically come with a message which plays in order of return.
 				return {
                     
@@ -263,7 +258,7 @@ SMODS.Joker {
 }
 
 SMODS.Joker {
-    key = "redd_lucky_seven",
+    key = "lucky_seven",
     loc_txt = {
         name = "Lucky Seven",
         text = {
@@ -293,6 +288,7 @@ SMODS.Joker {
                 end
             end
             if faces > 0 then
+                card.juice_up(0.5 , 0.5)
                 return {
                     message = localize('k_lucky'),
                     colour = G.C.MONEY
@@ -303,7 +299,7 @@ SMODS.Joker {
 }
 
 SMODS.Joker{
-    key = "redd_acesexual",
+    key = "acesexual",
     loc_txt = {
         name = "Ace-sexual",
         text = {
@@ -336,14 +332,19 @@ SMODS.Joker{
     calculate = function(self, card, context)
         if context.individual and context.cardarea == G.play and not context.blueprint then
             if context.other_card:get_id() == 14 then 
+                card.juice_up(0.5 , 0.5)
                 card.ability.extra.xmult = card.ability.extra.xmult + card.ability.extra.gain
+                return {
+                    message = card.ability.extra.xmult
+                }
             end
         end
     
-        if context.joker_main then 
+        if context.joker_main and card.ability.extra.xmult > 1 then 
+            card.juice_up(0.5 , 0.5)
             return {
-                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } },
-                Xmult_mod = card.ability.extra.mult
+                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.xmult } },
+                Xmult_mod = card.ability.extra.xmult
             }
         end
     end,
@@ -351,3 +352,159 @@ SMODS.Joker{
 
 
 -- ####################################### VERSION 1.0.2 ###############################################
+
+SMODS.Joker{
+    key = "engagment_ring",
+    loc_txt = {
+        name = "Engagment Ring",
+        text = {
+            "This {C:attention}Joker{} gains {C:blue}+#2#{}",
+            "Chips when each {C:orange}Diamond{}",
+            "Is scored."
+            "{C:inactive}(Currently {C:blue}+#1#{} Chips){}"
+        }
+    },
+    atlas = "redd_atlas_j",
+    pos = { x = 0, y = 0 },
+    rarity = 3,
+    cost = 6,
+    blueprint_compat = true,
+    config = {
+        extra = {
+            chips = 0,
+            gain = 1,
+        }
+    },
+
+    loc_vars = function(self, info_queue, card)
+        return {
+            vars = {
+                card.ability.extra.chips,
+                card.ability.extra.gain,
+            }
+        }
+    end,
+
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play and not context.blueprint then
+            if context.other_card:is_suit("Diamonds") then
+                card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.gain
+                card.juice_up(0.5 , 0.5)
+                return {
+                    message = "+ " .. card.ability.extra.gain
+                }
+            end
+        end
+        
+        if context.joker_main and card.ability.extra.chips > 1 then 
+            card.juice_up(0.5 , 0.5)
+
+            return {
+                chips = card.ability.extra.chips 
+            }
+        end
+    end,
+
+    
+}
+
+SMODS.Joker {
+    key = "in_the_knavy",
+    loc_txt = {
+        name = "In The Knavy",
+        text = {
+            "{C:attention}Jacks{} give {X:mult,C:white}+#1#{} Mult",
+            "when scored."
+        }
+    }
+    atlas = "redd_atlas_j",
+    pos = { x = 0, y = 0 },
+    rarity = 2,
+    cost = 4,
+    blueprint_compat = true,
+    config = {
+        extra = {
+            mult = 10
+        }
+    },
+
+    loc_vars = function(self, info_queue, card) {
+        return {
+            vars = {
+                card.ability.extra.mult
+            }
+        }
+    },
+
+    calculate = function(self, card, context)
+        if context.individual and context.cardarea == G.play then 
+            if context.other_card:get_id() == 11 then
+                card.juice_up(0.5 , 0.5)
+                return {
+                    mult = card.ability.extra.mult  
+                }
+            end
+        end
+    end,
+}
+
+SMODS.Joker {
+    key = "greatfull_joker",
+    loc_txt = {
+        name = "Greatfull Joker",
+        text = {
+            "Gains {X:mult,C:white}X2{} Mult",
+            "at end of shop if ",
+            "no {C:green}Rerolls{} were used",
+            "{C:inactive}(Curently {X:mult,C:white}X#1#{} mult)"
+        }
+    }
+    atlas = "redd_atlas_j",
+    pos = { x = 0, y = 0},
+    rarity = 3,
+    cost = 6,
+    blueprint_compat = true,
+    config = {
+        extra = {
+            mult = 1,
+            gain = 2,
+            add = true,
+        }
+    },
+
+    loc_vars = function(self, info_queue, card) 
+        return {
+            vars = {
+                card.ability.extra.mult,
+                card.ability.extra.gain
+            }
+        }
+    end,
+
+    calculate = function(self, card, context)
+        if context.end_of_round and not context.blueprint then
+            card.ability.extra.add = true
+        end
+
+        if context.reroll_shop and not context.blueprint then 
+            card.ability.extra.add = false
+            return {
+                message = "Busted",
+            }
+        end
+
+        if context.ending_shop and card.ability.extra.add == true then
+            card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.gain
+            card.juice_up(0.5, 0.5)
+            return {
+                message = card.ability.extra.mult
+            }
+        end
+
+        if context.joker_main and card.ability.extra.mult > 1 then 
+            return {
+                mult = card.ability.extra.mult
+            }
+        end
+    end,    
+}
