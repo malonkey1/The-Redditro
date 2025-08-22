@@ -38,10 +38,10 @@ This versions fixes few minor bugs and cosmetic problems, like triggering jokers
 - **Grateful Joker** - Gains X2 Mult at end of shop if no Rerolls were used.
 
 ### New Spectral Cards
-- **Patriarcha** - Select 1 card to apply Platinum Seal.
+- **Patriarcha** - Select 1 card to apply Iron Seal.
 
 ### New Seals
-- **Platinum Seal** - Creates a Chariot card if held in hand after the final played poker hand (Must have room).
+- **Iron Seal** - Creates a Chariot card if held in hand after the final played poker hand (Must have room).
 
 ### Changes 
 - **Four Square** - rarity increased to Rare.

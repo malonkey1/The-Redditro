@@ -10,7 +10,7 @@ SMODS.Consumable {
         -- How many cards can be selected.
         max_highlighted = 1,
         -- the key of the seal to change to
-        extra = 'redd_platinum',
+        extra = 'redd_iron',
     },
     loc_vars = function(self, info_queue, card)
         -- Handle creating a tooltip with seal args.
@@ -22,7 +22,7 @@ SMODS.Consumable {
         name = 'Patriarcha',
         text = {
             "Select {C:attention}#1#{} card to",
-            "apply {C:attention}Platinum Seal{}"
+            "apply {C:attention}Iron Seal{}"
         }
     },
     cost = 4,

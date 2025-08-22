@@ -117,9 +117,9 @@ SMODS.Joker {
     loc_txt = {
         name = "Rule of Three",
         text = {
-            "Rettrigger {C:attention}third{} played",
+            "Retrigger {C:attention}third{} played",
             "card. If it's a {C:attention}3{},",
-            "rettriger it {C:attention}three{}",
+            "retriger it {C:attention}three{}",
             "times instead."
         }
     },
@@ -252,6 +252,13 @@ SMODS.Joker {
     end
 }
 
+SMODS.Atlas {
+    key = 'Lucky Seven',
+    path = 'lucky7.png',
+    px = '71',
+    py = '95',
+}
+
 SMODS.Joker {
     key = "redd_lucky_seven",
     loc_txt = {
@@ -261,7 +268,7 @@ SMODS.Joker {
             "when scored.",   
         }
     },
-    atlas = "redd_atlas_j",
+    atlas = "Lucky Seven",
     pos = { x = 0, y = 0 },
     rarity = 2,
     cost = 4,
@@ -990,46 +997,44 @@ SMODS.Joker{
     loc_vars = function(self, info_queue, card)
         return { vars = { card.ability.extra.Xmult } }
     end,
-    in_pool = function(self, args)
-        return G.GAME.pool_flags.vremade_cavendish_extinct
-    end
+    in_pool = function() return G.GAME.pool_flags.vremade_cavendish_extinct end
 }
 -- credit to u/abemc123 for joker idea and sprite
-SMODS.Joker:take_ownership('joker',
+SMODS.Joker:take_ownership('j_cavendish',
     { 
-     calculate = function(self, card, context)
-	 if context.end_of_round and context.game_over == false and context.main_eval and not context.blueprint then
-            if pseudorandom('vremade_cavendish') < G.GAME.probabilities.normal / card.ability.extra.odds then
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        play_sound('tarot1')
-                        card.T.r = -0.2
-                        card:juice_up(0.3, 0.4)
-                        card.states.drag.is = true
-                        card.children.center.pinch.x = true
-                        G.E_MANAGER:add_event(Event({
-                            trigger = 'after',
-                            delay = 0.3,
-                            blockable = false,
-                            func = function()
-                                card:remove()
-                                return true
-                            end
-                        }))
-                        return true
-                    end
-                }))
-                G.GAME.pool_flags.vremade_cavendish_extinct = true
-                return {
-                    message = localize('k_extinct_ex')
-                }
-            else
-                return {
-                    message = localize('k_safe_ex')
-                }
+        calculate = function(self, card, context)
+            if context.end_of_round and context.game_over == false and context.main_eval and not context.blueprint then
+                if pseudorandom(card.ability.name == 'Cavendish' and 'cavendish' or 'gros_michel') < G.GAME.probabilities.normal / card.ability.extra.odds then
+                    G.E_MANAGER:add_event(Event({
+                        func = function()
+                            play_sound('tarot1')
+                            card.T.r = -0.2
+                            card:juice_up(0.3, 0.4)
+                            card.states.drag.is = true
+                            card.children.center.pinch.x = true
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'after',
+                                delay = 0.3,
+                                blockable = false,
+                                func = function()
+                                    card:remove()
+                                    return true
+                                end
+                            }))
+                            return true
+                        end
+                    }))
+                    G.GAME.pool_flags.vremade_cavendish_extinct = true
+                    return {
+                        message = localize('k_extinct_ex')
+                    }
+                else
+                    return {
+                        message = localize('k_safe_ex')
+                    }
+                end
             end
         end
-	end
     },
     true
 )
