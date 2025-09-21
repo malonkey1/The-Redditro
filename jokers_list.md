@@ -19,7 +19,7 @@
 - **Sleepy Joker** - 7X mult if total chips is 250 or less.
 - **Astronaut Icecream** - After 3 rounds, sell this to upgrade your last played poker hand by 3 levels.
 - **Legally Distinct** - All played face cards become steel cards when scored.
-- **Sniper** - If total score is exactly the same as required score create a free etherial tag.
+- **Sniper** - If total score is exactly the same as required score create a free ethereal tag.
 - **Crutch** - 3X mult. Debuffed after ante 7.
 - **Inconspicuous Joker** - Does something...
 - **Pineapple Joker** - 2X mult for each scored card with the heart suit.

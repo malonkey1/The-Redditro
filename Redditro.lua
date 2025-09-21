@@ -25,12 +25,14 @@ function SMODS.INIT.redditro()
     Redditro.VoucherTweaks = NFS.load(Redditro.mod.path .. "utils/VoucherTweaks.lua") or {}
     
     NFS.load(Redditro.mod.path .. "scripts/finished_jokers.lua")()
-    -- NFS.load(Redditro.mod.path .. "scripts/jokers.lua")()
+    NFS.load(Redditro.mod.path .. "scripts/jokers.lua")()
     NFS.load(Redditro.mod.path .. "scripts/spectrals.lua")()
     NFS.load(Redditro.mod.path .. "scripts/tarots.lua")()
     NFS.load(Redditro.mod.path .. "scripts/seals.lua")()
     NFS.load(Redditro.mod.path .. "scripts/enhancements.lua")()
     NFS.load(Redditro.mod.path .. "scripts/vouchers.lua")()
+    NFS.load(Redditro.mod.path .. "scripts/challenges.lua")()
+    NFS.load(Redditro.mod.path .. "scripts/tags.lua")()
 
 
     for _, v in pairs(Redditro.INIT) do

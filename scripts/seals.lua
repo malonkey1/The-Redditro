@@ -27,8 +27,11 @@ SMODS.Seal {
             if #G.consumeables.cards < G.consumeables.config.card_limit then
                 return {
                     SMODS.add_card{key = "c_chariot"},
-                    message = localize('c_chariot'),
-                    colour = G.C.BLACK
+                    card_eval_status_text(card, "extra", nil, nil, nil, {
+                        message = "Chariot",
+                        colour = G.C.BLACK,
+                        card = card,
+                    }),
                 }
             end
         end

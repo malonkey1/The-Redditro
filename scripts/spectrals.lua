@@ -44,3 +44,41 @@ SMODS.Consumable {
         G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
     end
 }
+
+SMODS.Consumable {
+    key = 'shade',
+    set = 'Spectral',
+    config = { max_highlighted = 1 },
+    loc_vars = function(self, info_queue, card)
+        info_queue[#info_queue + 1] = G.P_CENTERS.e_negative_playing_card
+        return { vars = { card.ability.max_highlighted } }
+    end,
+    loc_txt = {
+        name = "Shade",
+        text = {
+            "Add {C:negative}Negative{} to",
+            "{C:attention}#1#{} selected card in hand"
+        }
+    },
+    cost = 4,
+    atlas = "redd_atlas_s",
+    pos = {x=0, y=0},
+    use = function(self, card, area, copier)
+        G.E_MANAGER:add_event(Event({
+            trigger = 'after',
+            delay = 0.4,
+            func = function()
+                G.hand.highlighted[1]:set_edition('e_negative', true)
+                card:juice_up(0.3, 0.5)
+                return true
+            end
+        }))
+    end,
+    -- The config field already handles the functionality so it doesn't need to be implemented
+    -- The following is how the implementation would be
+    --[[
+    can_use = function(self, card)
+        return G.hand and #G.hand.highlighted <= card.config.max_highlighted and #G.hand.highlighted > 0
+    end
+    --]]
+}

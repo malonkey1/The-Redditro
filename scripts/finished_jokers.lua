@@ -159,28 +159,30 @@ SMODS.Joker {
     rarity = 2,
     cost = 4,
     blueprint_compat = true,
-    config = { extra = { mult = 1, count = 0, gain = 0.5 } },
+    config = { extra = { Xmult = 1, count = 0, gain = 0.5 } },
     
     loc_vars = function(self, info_queue, card)
-        return { vars = { card.ability.extra.count, card.ability.extra.mult, card.ability.extra.gain } }
+        return { vars = { card.ability.extra.count, card.ability.extra.Xmult, card.ability.extra.gain } }
     end,
     
     calculate = function(self, card, context)
-        if  context.individual and context.cardarea == G.play and context.other_card:get_id() == 4 and not context.blueprint then
+        if  context.individual and context.cardarea == G.play and context.other_card:get_id() == 4 and not context.other_card.debuff and not context.blueprint then
             card.ability.extra.count = card.ability.extra.count + 1
             if card.ability.extra.count >= 4 then
-                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.gain
+                card.ability.extra.Xmult = card.ability.extra.Xmult + card.ability.extra.gain
                 card.ability.extra.count = 0
+                return {
+                    focus = card,
+                    message = localize("k_upgrade_ex"),
+                    colour = G.C.RED,
+                }
             end
-            return {
-                message = "Upgraded"
-            }
 
         end
         if context.joker_main then
             return {
                 message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } },
-                Xmult_mod = card.ability.extra.mult
+                Xmult_mod = card.ability.extra.Xmult
             }
         end
     end,
@@ -210,7 +212,7 @@ SMODS.Joker {
         if context.joker_main and context.scoring_name == "High Card" then
             trigger = false
             for _, pcard in ipairs(context.scoring_hand) do
-                if not SMODS.has_enhancement(pcard, 'm_stone') then
+                if not SMODS.has_no_rank(pcard) then
                     if pcard:get_id() == 5 then
                         return {
                             xmult = card.ability.extra.xmult
@@ -339,8 +341,8 @@ SMODS.Joker{
     
         if context.joker_main then 
             return {
-                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } },
-                Xmult_mod = card.ability.extra.mult
+                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.xmult } },
+                Xmult_mod = card.ability.extra.xmult
             }
         end
     end,
@@ -623,7 +625,7 @@ SMODS.Joker{
     loc_txt = {
         name = 'Red Thread',
         text = {
-            '{X:mult,C:white}3X{} mult if all cards in hand are',
+            '{X:mult,C:white}3X{} mult if all cards held in hand are',
             '{C:hearts}hearts{}, or {C:diamonds}diamonds{}.'
         }
     },
@@ -761,6 +763,8 @@ SMODS.Joker{
     rarity = 2,
     cost = 6,
     blueprint_compat = false,
+    eternal_compat = false,
+    perishable_compat = true,
     config = { extra = { invis_rounds = 0, total_rounds = 3 } },
         loc_vars = function(self, info_queue, card)
         local main_end
@@ -852,7 +856,7 @@ SMODS.Joker{
         text = {
             'If total {C:attention}score {}is exactly the same',
             'as required {C:attention}score {}',
-            'create a free etherial tag'
+            'create a free ethereal tag'
         }
     },
     atlas = 'joker15',
