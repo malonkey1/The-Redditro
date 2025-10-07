@@ -65,7 +65,7 @@ SMODS.Consumable:take_ownership('c_temperance',
                 func = function()
                     play_sound('timpani')
                     card:juice_up(0.3, 0.5)
-                    ease_dollars(self.ability.money, true)
+                    ease_dollars(card.ability.money, true)
                     return true
                 end
             }))
