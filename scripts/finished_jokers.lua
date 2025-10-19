@@ -119,7 +119,7 @@ SMODS.Joker {
         text = {
             "Retrigger {C:attention}third{} played",
             "card. If it's a {C:attention}3{},",
-            "retriger it {C:attention}three{}",
+            "retrigger it {C:attention}three{}",
             "times instead."
         }
     },

@@ -32,6 +32,7 @@ function SMODS.INIT.redditro()
     NFS.load(Redditro.mod.path .. "scripts/enhancements.lua")()
     NFS.load(Redditro.mod.path .. "scripts/vouchers.lua")()
     NFS.load(Redditro.mod.path .. "scripts/challenges.lua")()
+    NFS.load(Redditro.mod.path .. "scripts/boosters.lua")()
     NFS.load(Redditro.mod.path .. "scripts/tags.lua")()
 
 
